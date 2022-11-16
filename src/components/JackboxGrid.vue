@@ -5,7 +5,7 @@
       :key="tier.tier"
       class="tier-row"
       @drop="itemDropped($event, tier.tier)"
-      @dragenter.prevent="dragenter(tier.tier)"
+      @dragenter.prevent
       @dragover.prevent
     >
       <div class="tier-header">
@@ -101,7 +101,13 @@ export default class JackboxGrid extends Vue {
     });
   }
 
+  /**
+   * Tier row dropped handler
+   * @param e - Drop event
+   * @param tier - Tier that was dropped on
+   */
   itemDropped(e, tier: TIERS) {
+    // Get Item
     const itemID = e.dataTransfer.getData('itemID');
     let item = this.gridItems.find((i) => {
       return i.id === parseInt(itemID);
@@ -112,23 +118,30 @@ export default class JackboxGrid extends Vue {
     this.setItemTier(item, tier);
   }
 
+  /**
+   * Move given item from it's current tier and move to new tier
+   * @param item - The grid item / game being moved
+   * @param tier - the tier row to move the item to
+   */
   setItemTier(item: GridItemData, tier: TIERS) {
+    // Get tier that item currently lives on
     const currentTier = this.tierRows[item.tier];
+    // Find games index within that tier
     const gameIndex = currentTier.games.findIndex((g) => {
       return g.id === item.id;
     });
+
     if (gameIndex > -1) {
+      // Remove from current tier
       let removed = currentTier.games.splice(gameIndex, 1)[0];
+      // Update item's current tier
       removed.tier = tier;
+      // Get new tier row
       const newTier = this.tierRows[tier];
+      // Push item to new row
       newTier.games.push(removed);
     }
   }
-
-  dragenter(tier: string) {
-    console.log("dragged over right now: ", tier);
-  }
-
 }
 </script>
 

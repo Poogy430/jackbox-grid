@@ -26,6 +26,7 @@ export default class GridItem extends Vue {
 
   showOverlay = false;
 
+  // Computed string for source of image
   get imageSrc() {
     if (this.gridItem.game.imgSrc === '') {
       return require(`../assets/images/games/ydkjclassic.webp`);
@@ -33,8 +34,13 @@ export default class GridItem extends Vue {
     return require(`../assets/images/games/${this.gridItem.game.imgSrc}`);
   }
 
+  /**
+   * Start dragging of item handler
+   * @param e - The drag event
+   */
   startDrag(e: DragEvent) {
     if (!e.dataTransfer) return;
+    // Hide mouse over overlay
     this.showOverlay = false;
     e.dataTransfer.dropEffect = 'move';
     e.dataTransfer.effectAllowed = 'move';
